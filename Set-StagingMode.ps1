@@ -5,7 +5,6 @@
 if (-not (Get-Module -Name ADSync)){
     Import-Module "C:\Program Files\Microsoft Azure AD Sync\Bin\ADSync\ADSync.psd1"
 }
-#$originalStagingModeSetting = (Get-ADSyncScheduler).StagingModeEnabled
 
 $GlobalSettings = Get-ADSyncGlobalSettings
 
@@ -19,18 +18,5 @@ else {
 }
 
 Set-ADSyncGlobalSettings -GlobalSettings $GlobalSettings | Out-Null
-
-#$currentStagingModeSetting = (Get-ADSyncScheduler).StagingModeEnabled
-
-#if ($currentStagingModeSetting -eq $True){
-#    $currentStagingModeSetting = "Enabled"
-#}
-#else {
-#    $currentStagingModeSetting = "Disabled"
-#}
-
-#Write-Output "`nPrevious Staging Mode state was $originalStagingModeSetting"
-
-#Write-Output "`nStaging Mode has been $currentStagingModeSetting"
 
 Get-ADSyncScheduler | Select StagingModeEnabled
