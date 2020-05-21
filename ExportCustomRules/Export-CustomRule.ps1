@@ -1,7 +1,7 @@
 ﻿#Requires -modules ADSync
 
 #Get the target computer name
-$targetComputerName = "mbt-sync3"
+$targetComputerName = ""
 
 #Set the source folders
 $rootFolder = "$HOME\Desktop\"
