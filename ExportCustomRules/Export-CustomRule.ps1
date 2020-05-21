@@ -270,11 +270,10 @@ Invoke-Command -Session $targetComputerSession `
             foreach ($file in $files){
                 $parentPath = $file.PSParentPath
                 $fileName = $file.Name
-                $newFileName = "New_" + "$fileName"
 
-                $newFileContent = (Get-Content $file.FullName -raw) -replace $sourceConnectorId, $targetConnectorId
+                $fileContent = (Get-Content $file.FullName -raw) -replace $sourceConnectorId, $targetConnectorId
 
-                Set-Content -Value $newFileContent -Path $file.FullName
+                Set-Content -Value $fileContent -Path $file.FullName
             }
         }
     }
