@@ -6,7 +6,7 @@ The only value to add to the script is the target computer name at line 4:
 
 $targetComputerName = ""
 
-Since the script uses the Test-NetConnection cmdlet, it is recommended to run it with PowerShell version 4 and above or Windows Server 2012 R2.
+Since the script uses the Test-NetConnection cmdlet to test connectivity with the target server, it is recommended to run it with PowerShell version 4 and above or Windows Server 2012 R2.
 
 PowerShell Remoting WinRM port 5985 has to be open on the target server for the script to complete successfully.
 
