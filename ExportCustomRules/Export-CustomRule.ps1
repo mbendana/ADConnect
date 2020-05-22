@@ -7,33 +7,44 @@
    Export AD Connect custom rules
 
 .DESCRIPTION
-   This script is to export AD Connect custom rules from a source server (Active) to a target server (Staging Mode) or viceversa.
-The script exports all custom rules from the source server, including the ones disabled.
+   This script is to export AD Connect custom rules from a source computer (Active ADConnect server) to a target computer (Staging Mode ADConnect server) or viceversa.
+The script exports all custom rules from the source computer, including the ones disabled.
 The script has been tested with ADConnect versions: 1.3.21.0, 1.4.38.0 and 1.5.30.0.
+Since the script uses the Test-NetConnection cmdlet to test connectivity with the target computer for creating a remote session with it, it should be run with PowerShell version 4 and above or in Windows Server 2012 R2.
+PowerShell Remoting WinRM port 5985 has to be open on the target computer for the script to complete successfully.
 
 .EXAMPLE
    .\Export-CustomRule.ps1
 
+.EXAMPLE
+   .\Export-CustomRule.ps1 -targetComputerName <ComputerName>
+
 .INPUTS
-   $targetComputerName (not from pipeline)
+   -targetComputerName (not from pipeline)
 
 .OUTPUTS
    folders and files (not to pipeline)
 
 .FUNCTIONALITY
-   This script is to export AD Connect custom rules from a source server (Active) to a target server (Staging Mode) or viceversa.
-The script exports all custom rules from the source server, including the ones disabled.
+   This script is to export AD Connect custom rules from a source computer (Active ADConnect server) to a target computer (Staging Mode ADConnect server) or viceversa.
+The script exports all custom rules from the source computer, including the ones disabled.
 The script has been tested with ADConnect versions: 1.3.21.0, 1.4.38.0 and 1.5.30.0.
+Since the script uses the Test-NetConnection cmdlet to test connectivity with the target computer for creating a remote session with it, it should be run with PowerShell version 4 and above or in Windows Server 2012 R2.
+PowerShell Remoting WinRM port 5985 has to be open on the target computer for the script to complete successfully.
 
-The only value to add to the script is the target computer name at line 44:
+The only value the script needs is the target computer name:
+$targetComputerName
 
-$targetComputerName = ""
+The script creates a folder named "ADConnectExportedCustomRules" under the Desktop folder on the source computer.
+For each source computer connector that has at least 1 custom rule related to it, additional folders are created under the "ADConnectExportedCustomRules" folder with the name of the correspoding connector.
+1 .ps1 file is created under each connector folder. The file contains all custom rules related to the connector: Inbound/Outbound, Enabled/Disabled.
 
-Since the script uses the Test-NetConnection cmdlet to test connectivity with the target server, it should be run with PowerShell version 4 and above or in Windows Server 2012 R2.
+After the folder and file creations are done, they are all copied over to the target computer.
+After the copy operation is done (if the test connectivity with the target computer was successful), the process of replacing the source connector Ids with the target connector Ids in the .ps1 files occurs.
 
-PowerShell Remoting WinRM port 5985 has to be open on the target server for the script to complete successfully.
+Once the .ps1 files are on the target computer, run the files with PowerShell to import the custom rules.
 
-If the port is not open, the AD Connect custom rules are still exported to the source server but have to be manually copied to the target server and the target server connector Ids in the .ps1 files have to be changed manually as per:
+If the PowerShell Remoting WinRM port 5985 is not open, the AD Connect custom rules are still exported to the source computer but have to be manually copied over to the target computer and the target computer connector Ids in the .ps1 files have to be changed manually as per:
 https://docs.microsoft.com/en-us/azure/active-directory/hybrid/how-to-upgrade-previous-version#move-a-custom-configuration-from-the-active-server-to-the-staging-server
 
 #>
@@ -41,7 +52,11 @@ https://docs.microsoft.com/en-us/azure/active-directory/hybrid/how-to-upgrade-pr
 #Requires -modules ADSync
 
 #Get the target computer name
-$targetComputerName = ""
+
+[CmdletBinding()]
+Param(
+      [Parameter(Mandatory=$True)]  [string]$targetComputerName
+)
 
 #Set the source folders
 $rootFolder = "$HOME\Desktop\"
@@ -89,15 +104,12 @@ foreach ($customRule in $customRules) {
     $description = $customRule.Description.Replace("'","''").Replace("`n","").Trim()
     $isCustomRuleDisabled = $customRule.Disabled
 
-    if($isCustomRuleDisabled -eq $True){
-
     $customRuleFileContent +=
     "New-ADSyncRule  ``
 -Name '$($customRule.Name)' ``
 -Identifier '$($customRule.Identifier)' ``
 -Description '$($description)' ``
 -Direction '$($customRule.Direction)' ``
--Disabled ``
 -Precedence $($customRule.Precedence) ``
 -PrecedenceAfter '$($customRule.PrecedenceAfter)' ``
 -PrecedenceBefore '$($customRule.PrecedenceBefore)' ``
@@ -106,27 +118,17 @@ foreach ($customRule in $customRules) {
 -Connector '$($customRule.Connector)' ``
 -LinkType '$($customRule.LinkType)' ``
 -SoftDeleteExpiryInterval 0 ``
--ImmutableTag '' ``
+-ImmutableTag '' ``"
+
+    if($isCustomRuleDisabled -eq $True){
+        $customRuleFileContent +=
+"-Disabled ``
 -OutVariable syncRule`n"
+
     }
     else{
-
-    $customRuleFileContent +=
-    "New-ADSyncRule  ``
--Name '$($customRule.Name)' ``
--Identifier '$($customRule.Identifier)' ``
--Description '$($description)' ``
--Direction '$($customRule.Direction)' ``
--Precedence $($customRule.Precedence) ``
--PrecedenceAfter '$($customRule.PrecedenceAfter)' ``
--PrecedenceBefore '$($customRule.PrecedenceBefore)' ``
--SourceObjectType '$($customRule.SourceObjectType)' ``
--TargetObjectType '$($customRule.TargetObjectType)' ``
--Connector '$($customRule.Connector)' ``
--LinkType '$($customRule.LinkType)' ``
--SoftDeleteExpiryInterval 0 ``
--ImmutableTag '' ``
--OutVariable syncRule`n"
+        $customRuleFileContent +=
+"-OutVariable syncRule`n"
     }
 
     # WORKING ON ATTRIBUTE FLOW MAPPINGS
@@ -136,27 +138,22 @@ foreach ($customRule in $customRules) {
     foreach($attributeFlowMapping in $attributeFlowMappings){
 
     $flowType = $attributeFlowMapping.FlowType
-
-    if($flowType -eq "Expression"){
-
-    $customRuleFileContent += "Add-ADSyncAttributeFlowMapping  ``
--SynchronizationRule `$syncRule[$($customRuleCounter)] ``
--Destination '$($attributeFlowMapping.Destination)' ``
--FlowType '$($attributeFlowMapping.FlowType)' ``
--ValueMergeType '$($attributeFlowMapping.ValueMergeType)' ``
--Expression '$($attributeFlowMapping.Expression)' ``
--OutVariable syncRule`n"
-    
-    }
-    else
-    {
     $source = $attributeFlowMapping.Source
+
     $customRuleFileContent += "Add-ADSyncAttributeFlowMapping  ``
 -SynchronizationRule `$syncRule[$($customRuleCounter)] ``
--Source @('$source') ``
 -Destination '$($attributeFlowMapping.Destination)' ``
 -FlowType '$($attributeFlowMapping.FlowType)' ``
--ValueMergeType '$($attributeFlowMapping.ValueMergeType)' ``
+-ValueMergeType '$($attributeFlowMapping.ValueMergeType)' ``"
+    
+    if($flowType -eq "Expression"){
+        $customRuleFileContent +=
+"-Expression '$($attributeFlowMapping.Expression)' ``
+-OutVariable syncRule`n"
+    }
+    else{
+        $customRuleFileContent +=
+"-Source @('$source') ``
 -OutVariable syncRule`n"
 
     }
@@ -262,6 +259,9 @@ try{
 }
 catch{
     Write-Warning "Could not connect to $targetComputerName via PowerShell. Check the computer has port 5985 open."
+    Write-Warning "The custom rule files have been created under folder $targetPath
+    The files have to be manually copied over to the target computer $targetComputerName and the target computer connector Ids in the .ps1 files have to be changed manually as per:
+    https://docs.microsoft.com/en-us/azure/active-directory/hybrid/how-to-upgrade-previous-version#move-a-custom-configuration-from-the-active-server-to-the-staging-server"
     break
 }
 
