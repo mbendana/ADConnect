@@ -16,7 +16,7 @@ After the copy operation is done (if the test connectivity with the target compu
 
 Once the .ps1 files are on the target computer, run the files with PowerShell to import the custom rules.
 
-If the PowerShell Remoting WinRM port 5985 is not open, the AD Connect custom rules are still exported to the source computer but have to be manually copied over to the target computer and the target computer connector Ids in the .ps1 files have to be changed manually as per:
-https://docs.microsoft.com/en-us/azure/active-directory/hybrid/how-to-upgrade-previous-version#move-a-custom-configuration-from-the-active-server-to-the-staging-server
+If the PowerShell Remoting WinRM port 5985 is not open, the AD Connect custom rules are still exported to the source computer but have to be manually copied over to the target computer and the script at https://github.com/mbendana/ADConnect/blob/ExportCustomRules/ExportCustomRules/Set-CustomRule.ps1 can be used to automatically change the connector Ids in the .ps1 files.
 
-ALSO, the script at https://github.com/mbendana/ADConnect/blob/ExportCustomRules/ExportCustomRules/Set-CustomRule.ps1 can be used to automatically change the connector Ids in the .ps1 files.
+As a last option, the target computer connector Ids in the .ps1 files can also be changed manually as per:
+https://docs.microsoft.com/en-us/azure/active-directory/hybrid/how-to-upgrade-previous-version#move-a-custom-configuration-from-the-active-server-to-the-staging-server
