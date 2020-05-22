@@ -25,7 +25,7 @@ The script has been tested with ADConnect versions: 1.3.21.0, 1.4.38.0 and 1.5.3
 The script exports all custom rules from the source server, including the ones disabled.
 The script has been tested with ADConnect versions: 1.3.21.0, 1.4.38.0 and 1.5.30.0.
 
-The only value to add to the script is the target computer name at line 4:
+The only value to add to the script is the target computer name at line 44:
 
 $targetComputerName = ""
 
