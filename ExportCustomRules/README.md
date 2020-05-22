@@ -1,7 +1,7 @@
 This script is to export AD Connect custom rules from a source computer (Active ADConnect server) to a target computer (Staging Mode ADConnect server) or viceversa.
 The script exports all custom rules from the source computer, including the ones disabled.
 The script has been tested with ADConnect versions: 1.3.21.0, 1.4.38.0 and 1.5.30.0.
-Since the script uses the Test-NetConnection cmdlet to test connectivity with the target computer for creating a remote session with it, it should be run with PowerShell version 4 and above or in Windows Server 2012 R2.
+Since the script uses the Test-NetConnection cmdlet to test connectivity with the target computer for creating a remote session with it, it should be run with PowerShell version 4 and above or in Windows Server 2012 R2 and above.
 PowerShell Remoting WinRM port 5985 has to be open on the target computer for the script to complete successfully.
 
 The only value the script needs is the target computer name:
