@@ -86,9 +86,6 @@ foreach ($customRule in $customRules) {
     $customRuleDirection = $customRule.Direction
     $customRuleIdentifier = $customRule.Identifier
 
-    $attributeFlowMappings = $customRule.AttributeFlowMappings
-    $attributeFlowMappingsCounter = 0
-
     $description = $customRule.Description.Replace("'","''").Replace("`n","").Trim()
     $isCustomRuleDisabled = $customRule.Disabled
 
@@ -134,6 +131,8 @@ foreach ($customRule in $customRules) {
 
     # WORKING ON ATTRIBUTE FLOW MAPPINGS
 
+    $attributeFlowMappings = $customRule.AttributeFlowMappings
+
     foreach($attributeFlowMapping in $attributeFlowMappings){
 
     $flowType = $attributeFlowMapping.FlowType
@@ -161,15 +160,12 @@ foreach ($customRule in $customRules) {
 -OutVariable syncRule`n"
 
     }
-    #$attributeFlowMappingsCounter += 1
+
     }
 
     # WORKING ON SCOPING FILTERS / CONDITIONS
 
     $scopeGroupConditions = $customRule.ScopeFilter
-    $scopeGroupConditionsCounter = 0
-
-    #$scopeConditionCounter = 0
 
     foreach($scopeGroupCondition in $scopeGroupConditions) {
     
@@ -200,7 +196,6 @@ foreach ($customRule in $customRules) {
     # WORKING ON JOIN FILTERS / CONDITIONS
 
     $joinGroupConditions = $customRule.JoinFilter
-    $joinConditionsCounter = 0
 
     foreach($joinGroupCondition in $joinGroupConditions) {
     
