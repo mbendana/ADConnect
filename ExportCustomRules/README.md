@@ -8,7 +8,7 @@ The only value the script needs is the target computer name:
 $targetComputerName
 
 The script creates a folder named "ADConnectExportedCustomRules" under the Desktop folder on the source computer.
-For each source computer connector that has at least 1 custom rule related to it, additional folders are created under the "ADConnectExportedCustomRules" folder with the name of the correspoding connector.
+For each source computer connector that has at least 1 custom rule related to it, additional folders are created under the "ADConnectExportedCustomRules" folder with the name of the corresponding connector.
 1 .ps1 file is created under each connector folder. The file contains all custom rules related to the connector: Inbound/Outbound, Enabled/Disabled.
 
 After the folder and file creations are done, they are all copied over to the target computer.
