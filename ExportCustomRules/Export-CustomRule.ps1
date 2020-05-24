@@ -87,7 +87,7 @@ $connectorType = $connector.ConnectorTypeName
 #Get all rules related with current connector in the loop
 $customRules = Get-ADSyncRule | Where-Object { ($_.IsStandardRule -eq $False) -and ($_.Connector -eq $connectorId)}
 
-#Set to blank the file which will collect all script content
+#Set to blank the variable which will collect all script content
 $customRuleFileContent = @()
 
 #Set custom rule counter
@@ -231,7 +231,7 @@ foreach ($customRule in $customRules) {
 
 }
 
-#///////////////////////////////////////
+    # CREATING THE FOLDERS AND FILES ON THE SOURCE COMPUTER
 
     if($connectorName -like "*AAD"){
         $connectorFolderName = "Cloud_Connector" + "_" + $connectorId
@@ -248,11 +248,11 @@ foreach ($customRule in $customRules) {
 
     Set-Content -Value $customRuleFileContent -Path $fileNamePath.FullName
 
-#///////////////////////////////////////
-
 }
 
 }
+
+    # WORKING ON THE TARGET COMPUTER
 
 #Test connection to target computer on PSRemoting WinRM port
 try{
