@@ -303,9 +303,11 @@ Invoke-Command -Session $targetComputerSession `
                 Write-Warning "No connector with name $sourceConnectorName found on target computer $env:COMPUTERNAME"
             }
             
-            $newFolderPath =  "$HOME\Desktop\ADConnectExportedCustomRules\$($targetConnectorName)_Connector_$($targetConnectorId)"
+            $newFolderName = "$($targetConnectorName)_Connector_$($targetConnectorId)"
 
-            $newFolder = Rename-Item -Path $folder.FullName -NewName "$($targetConnectorName)_Connector_$($targetConnectorId)"
+            $newFolderPath =  "$HOME\Desktop\ADConnectExportedCustomRules\$($newFolderName)"
+
+            Rename-Item -Path $folder.FullName -NewName $($newFolderName)
                     
             $files = Get-ChildItem -Path $newFolderPath -Filter "*.ps1" -File
 
