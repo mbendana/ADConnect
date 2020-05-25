@@ -64,7 +64,7 @@ $rootFolder = "$HOME\Desktop\"
 $targetFolder = "ADConnectExportedCustomRules"
 $targetPath = $rootFolder + $targetFolder + "\"
 
-#Test if path exists. If yes, remove all and recreate it. If no, create it
+#Test if path exists. If yes, remove all and recreate it. If not, create it
 if((Test-Path $targetPath)){
     Remove-Item -Path $targetPath -Recurse -Force
     New-Item -Path $targetPath -ItemType Directory | Out-Null
