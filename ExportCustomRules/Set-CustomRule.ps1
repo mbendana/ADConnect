@@ -25,16 +25,22 @@ foreach($folder in (Get-ChildItem -Path "$HOME\Desktop\ADConnectExportedCustomRu
         if($sourceConnectorName -eq "Cloud"){
             $targetConnector = Get-ADSyncConnector | Where-Object { ($_.Name -like "*AAD") -and ($_.ConnectorTypeName -eq "Extensible2")}
             $targetConnectorId = $targetConnector.Identifier
+            $targetConnectorName = $targetConnector.Name
         }else{
             $targetConnector = Get-ADSyncConnector -Name $sourceConnectorName
             $targetConnectorId = $targetConnector.Identifier
+            $targetConnectorName = $targetConnector.Name
         }
     }
     catch{
         Write-Warning "No connector with name $sourceConnectorName found on target computer $env:COMPUTERNAME"
     }
             
-    $files = Get-ChildItem -Path $folder.FullName -Filter "*.ps1" -File
+    $newFolderPath =  "$HOME\Desktop\ADConnectExportedCustomRules\$($targetConnectorName)_Connector_$($targetConnectorId)"
+
+    $newFolder = Rename-Item -Path $folder.FullName -NewName "$($targetConnectorName)_Connector_$($targetConnectorId)"
+                    
+    $files = Get-ChildItem -Path $newFolderPath -Filter "*.ps1" -File
 
     foreach ($file in $files){
         $parentPath = $file.PSParentPath
