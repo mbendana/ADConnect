@@ -208,7 +208,6 @@ foreach ($customRule in $customRules) {
 -OutVariable condition$($joinConditionCounter)`n"
 
         $joinConditions += '$condition' + $($joinConditionCounter) + '[0]'
-
         $joinConditionCounter += 1
     }
         
