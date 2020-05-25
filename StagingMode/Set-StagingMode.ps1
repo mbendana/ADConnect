@@ -1,4 +1,17 @@
-﻿#Requires -modules ADSync
+﻿<#
+
+.AUTHOR
+    Milton Halton
+
+.SYNOPSIS
+    This script is to simply toggle on/off the Staging Mode setting on an AD Connect server.
+
+.DESCRIPTION
+    This script is to simply toggle on/off the Staging Mode setting on an AD Connect server.
+
+#>
+
+#Requires -modules ADSync
 
 #Check if module is present, if not import it
 
