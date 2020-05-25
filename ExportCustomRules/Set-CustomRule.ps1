@@ -1,6 +1,17 @@
-﻿#Requires -modules ADSync
+﻿<#
 
-#Use this script to replace the source computer connector Ids in the .ps1 files with the ones on the target computer, if script ExportCustomRules.ps1 at https://github.com/mbendana/ADConnect/blob/ExportCustomRules/ExportCustomRules/Export-CustomRule.ps1 did not complete successfully.
+.AUTHOR
+    Milton Halton
+
+.SYNOPSIS
+   Replace the source computer connector Ids in the .ps1 files with the ones on the target computer
+
+.DESCRIPTION
+    #Use this script to replace the source computer connector Ids in the .ps1 files with the ones on the target computer, if script ExportCustomRules.ps1 at https://github.com/mbendana/ADConnect/blob/ExportCustomRules/ExportCustomRules/Export-CustomRule.ps1 did not complete successfully.
+
+#>
+
+#Requires -modules ADSync
 
 #Check if the ADSync module is loaded. If not, import it.
 if (-not (Get-Module -Name ADSync)){
