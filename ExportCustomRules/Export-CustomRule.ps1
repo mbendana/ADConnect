@@ -260,7 +260,8 @@ try{
 catch{
     Write-Warning "Could not connect to $targetComputerName via PowerShell. Check the computer has port 5985 open."
     Write-Warning "The custom rule files have been created under folder $targetPath
-    The files have to be manually copied over to the target computer $targetComputerName and the target computer connector Ids in the .ps1 files have to be changed manually as per:
+    The files have to be manually copied over to the target computer $targetComputerName and the Set-CustomRule.ps1 script found at https://github.com/mbendana/ADConnect/tree/ExportCustomRules can be used to automatically change the target computer connector Ids in the .ps1 files.
+    Also, the target computer connector Ids in the .ps1 files can be changed manually as per:
     https://docs.microsoft.com/en-us/azure/active-directory/hybrid/how-to-upgrade-previous-version#move-a-custom-configuration-from-the-active-server-to-the-staging-server"
     break
 }
